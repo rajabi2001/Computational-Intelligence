@@ -186,20 +186,23 @@ class Fuzzification():
         crisp_input = int(self.input_dict["chest_pain"])
         
         if crisp_input == 1:
-            self.membership_dict["chest_pain"]["typical_angina"] = 1.000
+            self.membership_dict["chest_pain"]["typical_angina"] = 1.0
         elif crisp_input == 2:
-            self.membership_dict["chest_pain"]["atypical_angina"] = 1.000
+            self.membership_dict["chest_pain"]["atypical_angina"] = 1.0
         elif crisp_input == 3:
-            self.membership_dict["chest_pain"]["non_anginal_pain"] = 1.000
+            self.membership_dict["chest_pain"]["non_anginal_pain"] = 1.0
         elif crisp_input == 4:
-            self.membership_dict["chest_pain"]["asymptomatic"] = 1.000
+            self.membership_dict["chest_pain"]["asymptomatic"] = 1.0
         
 
     def exercise_fuzzificate(self):
 
         crisp_input = int(self.input_dict["exercise"])
         # 0 for false and 1 for true
-        self.membership_dict["exercise"]= float(crisp_input)
+        if crisp_input  == 1:
+            self.membership_dict["exercise"]["true"] = 1.0
+        else:
+            self.membership_dict["exercise"]["false"] = 1.0
         
         
     def thallium_scan_fuzzificate(self):
@@ -207,11 +210,11 @@ class Fuzzification():
         crisp_input = int(self.input_dict["thallium_scan"])
         
         if crisp_input == 3:
-            self.membership_dict["thallium_scan"]["normal"] = 1.000
+            self.membership_dict["thallium_scan"]["normal"] = 1.0
         elif crisp_input == 6:
-            self.membership_dict["thallium_scan"]["medium"] = 1.000
+            self.membership_dict["thallium_scan"]["medium"] = 1.0
         elif crisp_input == 7:
-            self.membership_dict["thallium_scan"]["high"] = 1.000
+            self.membership_dict["thallium_scan"]["high"] = 1.0
         else:
             print("error for amount of thallium_scan")
             exit(1)
@@ -223,14 +226,18 @@ class Fuzzification():
         
         # 0 for false and 1 for true
         if crisp_input >= 120:
-            self.membership_dict["blood_sugar"] = 1.000
+            self.membership_dict["blood_sugar"]["true"] = 1.0
         else:
-            self.membership_dict["blood_sugar"] = 0.000
+            self.membership_dict["blood_sugar"]["false"] = 1.0
 
 
     def sex_fuzzificate(self):
 
         crisp_input = int(self.input_dict["sex"])
         # 0 for male and 1 for female
-        self.membership_dict["sex"]= float(crisp_input)
+        if crisp_input  == 1:
+            self.membership_dict["sex"]["female"] = 1.0
+        else:
+            self.membership_dict["sex"]["male"] = 1.0
+
 
