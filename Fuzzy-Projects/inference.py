@@ -280,6 +280,8 @@ class Inference():
         temp = self.diagnosis_dict["sick_4"]
         output_rule = self.membership_dict["age"]["very_old"]
         self.diagnosis_dict["sick_4"] = max(temp, output_rule)
+
+        return self.diagnosis_dict
         
         
         

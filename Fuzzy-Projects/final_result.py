@@ -13,7 +13,10 @@ class ProvideResult(object):
 
         myfuzziofication = Fuzzification(input_dict)
         membership_dict = myfuzziofication.fuzzificate()
-        print(membership_dict)
+        # print(membership_dict)
 
         myinference = Inference(membership_dict)
+        diagnosis_dict = myinference.infer()
+        # print(diagnosis_dict)
+
         pass
