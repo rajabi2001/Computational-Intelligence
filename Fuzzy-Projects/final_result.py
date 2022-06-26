@@ -1,3 +1,6 @@
+
+from fuzzification import Fuzzification
+
 class ProvideResult(object):
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -6,4 +9,8 @@ class ProvideResult(object):
 
     @staticmethod
     def get_final_result(input_dict: dict) -> str:
+
+        myfuzziofication = Fuzzification(input_dict)
+        myfuzziofication.fuzzificate()
+
         pass
