@@ -206,5 +206,80 @@ class Inference():
         output_rule = self.membership_dict["exercise"]["true"]
         self.diagnosis_dict["sick_2"] = max(temp, output_rule)
 
+        # RULE 40: IF (old_peak IS low) THEN health IS healthy;
+        temp = self.diagnosis_dict["healthy"]
+        output_rule = self.membership_dict["old_peak"]["low"]
+        self.diagnosis_dict["healthy"] = max(temp, output_rule)
 
-        pass
+        # RULE 41: IF (old_peak IS low) THEN health IS sick_1;
+        temp = self.diagnosis_dict["sick_1"]
+        output_rule = self.membership_dict["old_peak"]["low"]
+        self.diagnosis_dict["sick_1"] = max(temp, output_rule)
+
+        # RULE 42: IF (old_peak IS terrible) THEN health IS sick_2;
+        temp = self.diagnosis_dict["sick_2"]
+        output_rule = self.membership_dict["old_peak"]["terrible"]
+        self.diagnosis_dict["sick_2"] = max(temp, output_rule)
+
+        # RULE 43: IF (old_peak IS terrible) THEN health IS sick_3;
+        temp = self.diagnosis_dict["sick_3"]
+        output_rule = self.membership_dict["old_peak"]["terrible"]
+        self.diagnosis_dict["sick_3"] = max(temp, output_rule)
+
+        # RULE 44: IF (old_peak IS risk) THEN health IS sick_4;
+        temp = self.diagnosis_dict["sick_4"]
+        output_rule = self.membership_dict["old_peak"]["risk"]
+        self.diagnosis_dict["sick_4"] = max(temp, output_rule)
+
+        # RULE 45: IF (thallium IS normal) THEN health IS healthy;
+        temp = self.diagnosis_dict["healthy"]
+        output_rule = self.membership_dict["thallium"]["normal"]
+        self.diagnosis_dict["healthy"] = max(temp, output_rule)
+
+        # RULE 46: IF (thallium IS normal) THEN health IS sick_1;
+        temp = self.diagnosis_dict["sick_1"]
+        output_rule = self.membership_dict["thallium"]["normal"]
+        self.diagnosis_dict["sick_1"] = max(temp, output_rule)
+
+        # RULE 47: IF (thallium IS medium) THEN health IS sick_2;
+        temp = self.diagnosis_dict["sick_2"]
+        output_rule = self.membership_dict["thallium"]["medium"]
+        self.diagnosis_dict["sick_2"] = max(temp, output_rule)
+
+        # RULE 48: IF (thallium IS high) THEN health IS sick_3;
+        temp = self.diagnosis_dict["sick_3"]
+        output_rule = self.membership_dict["thallium"]["high"]
+        self.diagnosis_dict["sick_3"] = max(temp, output_rule)
+
+        # RULE 49: IF (thallium IS high) THEN health IS sick_4;
+        temp = self.diagnosis_dict["sick_4"]
+        output_rule = self.membership_dict["thallium"]["high"]
+        self.diagnosis_dict["sick_4"] = max(temp, output_rule)
+
+        # RULE 50: IF (age IS young) THEN health IS healthy;
+        temp = self.diagnosis_dict["healthy"]
+        output_rule = self.membership_dict["age"]["young"]
+        self.diagnosis_dict["healthy"] = max(temp, output_rule)
+
+        # RULE 51: IF (age IS mild) THEN health IS sick_1;
+        temp = self.diagnosis_dict["sick_1"]
+        output_rule = self.membership_dict["age"]["mild"]
+        self.diagnosis_dict["sick_1"] = max(temp, output_rule)
+
+        # RULE 52: IF (age IS old) THEN health IS sick_2;
+        temp = self.diagnosis_dict["sick_2"]
+        output_rule = self.membership_dict["age"]["old"]
+        self.diagnosis_dict["sick_2"] = max(temp, output_rule)
+
+        # RULE 53: IF (age IS old) THEN health IS sick_3;
+        temp = self.diagnosis_dict["sick_3"]
+        output_rule = self.membership_dict["age"]["old"]
+        self.diagnosis_dict["sick_3"] = max(temp, output_rule)
+
+        # RULE 54: IF (age IS very_old) THEN health IS sick_4;
+        temp = self.diagnosis_dict["sick_4"]
+        output_rule = self.membership_dict["age"]["very_old"]
+        self.diagnosis_dict["sick_4"] = max(temp, output_rule)
+        
+        
+        
