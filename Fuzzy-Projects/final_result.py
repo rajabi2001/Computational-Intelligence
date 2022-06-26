@@ -1,5 +1,6 @@
 
 from fuzzification import Fuzzification
+from inference import Inference
 
 class ProvideResult(object):
     def __new__(cls):
@@ -11,6 +12,8 @@ class ProvideResult(object):
     def get_final_result(input_dict: dict) -> str:
 
         myfuzziofication = Fuzzification(input_dict)
-        myfuzziofication.fuzzificate()
+        membership_dict = myfuzziofication.fuzzificate()
+        print(membership_dict)
 
+        myinference = Inference(membership_dict)
         pass
