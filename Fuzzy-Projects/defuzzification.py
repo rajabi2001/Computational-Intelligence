@@ -37,7 +37,7 @@ class Defuzzification():
                 sum_i += m
                 sum_ix += m*j
 
-        result = sum_i/sum_ix
+        result = sum_ix/sum_i
         
         return self.get_results(result)
 
@@ -68,8 +68,17 @@ class Defuzzification():
 
         return answer
 
-        
-
 
 
     
+if __name__ == "__main__":
+    
+    diagnosis_dict = {}
+    diagnosis_dict["healthy"] = 0
+    diagnosis_dict["sick_1"] = 0
+    diagnosis_dict["sick_2"] = 0
+    diagnosis_dict["sick_3"] = 0
+    diagnosis_dict["sick_4"] = 1
+
+    mydifuzzification = Defuzzification(diagnosis_dict)
+    print(mydifuzzification.defuzzificate())
