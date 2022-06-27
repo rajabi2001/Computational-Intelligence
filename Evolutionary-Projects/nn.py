@@ -10,8 +10,15 @@ class NeuralNetwork:
         :param layer_sizes: A list containing neuron numbers in each layers. For example [3, 10, 2] means that there are
         3 neurons in the input layer, 10 neurons in the hidden layer, and 2 neurons in the output layer.
         """
-        # TODO (Implement FCNNs architecture here)
-        pass
+        self.input_size = layer_sizes[0]
+        self.hidden_size = layer_sizes[1]
+        self.output_size = layer_sizes[2]
+
+        self.w1 = np.random.standard_normal(size=(self.hidden_size, self.input_size))
+        self.w2 = np.random.standard_normal(size=(self.output_size, self.hidden_size))
+
+        self.b1 = np.zeros((self.hidden_size, 1))
+        self.b2 = np.zeros((self.output_size, 1))
 
     def activation(self, x):
         """
@@ -19,8 +26,7 @@ class NeuralNetwork:
         :param x: Vector of a layer in our network.
         :return: Vector after applying activation function.
         """
-        # TODO (Implement activation function here)
-        pass
+        return 1 / (1 + np.exp(-x))
 
     def forward(self, x):
         """
@@ -28,5 +34,12 @@ class NeuralNetwork:
         :param x: Input vector which is a numpy array.
         :return: Output vector
         """
-        # TODO (Implement forward function here)
-        pass
+        x = np.reshape(x, (self.input_size, 1))
+        
+        z1 = (self.w1 @ x) + self.b1
+        a1 = self.activation(z1)
+  
+        z2 = (self.w2 @ a1) + self.b2
+        a2 = self.activation(z2)
+
+        return a2
