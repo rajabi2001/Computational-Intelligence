@@ -37,9 +37,12 @@ class Fuzzification():
 
     def find_membership(self,crisp_number,points_list):
 
-        xp,yp = 0,points_list[0][1]
+        xp,yp = 0,0
         fuzzy_number = -1
 
+        if crisp_number <= points_list[0][0]:
+            return points_list[0][1]
+        
 
         for i in points_list:
             xn,yn = i
@@ -237,7 +240,7 @@ class Fuzzification():
         # 0 for male and 1 for female
         if crisp_input  == 1:
             self.membership_dict["sex"]["female"] = 1.0
-        else:
+        elif crisp_input  == 0:
             self.membership_dict["sex"]["male"] = 1.0
-
-
+        
+    

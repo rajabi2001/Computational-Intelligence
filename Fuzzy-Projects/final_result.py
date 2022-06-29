@@ -15,17 +15,9 @@ class ProvideResult(object):
         myfuzzification = Fuzzification(input_dict)
         membership_dict = myfuzzification.fuzzificate()
         # print(membership_dict)
-
         myinference = Inference(membership_dict)
         diagnosis_dict = myinference.infer()
         # print(diagnosis_dict)
-        diagnosis_dict = {}
-        diagnosis_dict["healthy"] = 0
-        diagnosis_dict["sick_1"] = 0
-        diagnosis_dict["sick_2"] = 0
-        diagnosis_dict["sick_3"] = 1
-        diagnosis_dict["sick_4"] = 0
-
         mydifuzzification = Defuzzification(diagnosis_dict)
         return mydifuzzification.defuzzificate()
 
