@@ -1,4 +1,5 @@
 import copy
+import json
 import math
 import numpy as np
 from player import Player
@@ -7,8 +8,8 @@ from player import Player
 class Evolution:
     def __init__(self):
         self.game_mode = "Neuroevolution"
-        # options = q_tournament , roulette_wheel , sus
-        self.selection_mode = "q_tournament"
+        
+        self.generation_number = 0
 
     def q_tournament(self, num_players, players, q ):
         selected_players = []
@@ -24,7 +25,7 @@ class Evolution:
         return next_generation.tolist()
 
     def sus(self, players, num_players):
-        total_fitness = np.sum([p.fitness for p in players])
+        total_fitness = sum([p.fitness for p in players])
         step_size = total_fitness / num_players
         start_point = np.random.uniform(0, step_size)
 
@@ -52,8 +53,8 @@ class Evolution:
         child1 = self.clone_player(player1)
         child2 = self.clone_player(player2)
 
-        crossover_place1 = math.floor(player1.nn.hidden_size[1] / 2)
-        crossover_place2 = math.floor(player1.nn.output_size[2] / 2)
+        crossover_place1 = math.floor(player1.nn.hidden_size / 2)
+        crossover_place2 = math.floor(player1.nn.output_size / 2)
 
         child1.nn.w1 = np.concatenate((player1.nn.w1[:crossover_place1], player2.nn.w1[crossover_place1:]), axis=0)
         child1.nn.b1 = np.concatenate((player1.nn.b1[:crossover_place1], player2.nn.b1[crossover_place1:]), axis=0)
@@ -69,23 +70,14 @@ class Evolution:
     def mutation(self, player):
         mutation_probability = 0.3
 
-        layer_sizes = player.nn.layer_sizes
         if np.random.uniform(0, 1, 1) < mutation_probability:
-            player.nn.w1 += np.random.randn(layer_sizes[1], layer_sizes[0])
+            player.nn.w1 += np.random.randn(player.nn.hidden_size, player.nn.input_size)
         if np.random.uniform(0, 1, 1) < mutation_probability:
-            player.nn.w2 += np.random.randn(layer_sizes[2], layer_sizes[1])
+            player.nn.w2 += np.random.randn(player.nn.output_size, player.nn.hidden_size)
         if np.random.uniform(0, 1, 1) < mutation_probability:
-            player.nn.b1 += np.random.randn(layer_sizes[1], 1)
+            player.nn.b1 += np.random.randn(player.nn.hidden_size, 1)
         if np.random.uniform(0, 1, 1) < mutation_probability:
-            player.nn.b2 += np.random.randn(layer_sizes[2], 1)
-  
-
-        # random_number = np.random.uniform(0, 1, 1)
-        # if(random_number <= mutation_probability) :
-        #     player.nn.w1 += np.random.normal(0,0.3,size=player.nn.w1.shape)
-        #     player.nn.w2 += np.random.normal(0,0.3,size=player.nn.w2.shape)
-        #     player.nn.b1 += np.random.normal(0, 0.3, size=player.nn.b1.shape)
-        #     player.nn.b2 += np.random.normal(0, 0.3, size=player.nn.b2.shape)
+            player.nn.b2 += np.random.randn(player.nn.output_size, 1)
 
         return player
 
@@ -97,12 +89,18 @@ class Evolution:
         :param players: list of players in the previous generation
         :param num_players: number of players that we return
         """
-        # TODO (Implement top-k algorithm here)
-        # TODO (Additional: Implement roulette wheel here)
-        # TODO (Additional: Implement SUS here)
+        
+        players_sorted = sorted(players, key=lambda player: player.fitness, reverse=True)
+        fitness_list = [player.fitness for player in players]
+        best_fitness = float(np.max(fitness_list))
+        average_fitness = float(np.mean(fitness_list))
+        worst_fitness = float(np.min(fitness_list))
+        self.save_fitness_results(best_fitness , worst_fitness , average_fitness)
 
-        # TODO (Additional: Learning curve)
-        return players[: num_players]
+       
+        # return self.roulette_wheel(players, num_players)
+        return players_sorted[: num_players]
+        
 
     def generate_new_population(self, num_players, prev_players=None):
         """
@@ -114,15 +112,13 @@ class Evolution:
         """
         first_generation = prev_players is None
         if first_generation:
+            print(num_players)
             return [Player(self.game_mode) for _ in range(num_players)]
         else:
 
-            if self.selection_mode == "q_tournament":
-                new_players = self.q_tournament(num_players, prev_players, q=3)
-            elif self.selection_mode == "roulette_wheel":
-                new_players = self.roulette_wheel(prev_players, num_players)
-            elif self.selection_mode == "sus":
-                new_players = self.sus(prev_players, num_players)
+
+            new_players = self.q_tournament(num_players, prev_players, q=10)
+            # return players[: num_players]
 
             children = []
             for i in range( 0, len(new_players) , 2) :
@@ -135,10 +131,8 @@ class Evolution:
                 children.append(child2)
 
             return children
-
-
             
-            
+
 
     def clone_player(self, player):
         """
@@ -148,3 +142,26 @@ class Evolution:
         new_player.nn = copy.deepcopy(player.nn)
         new_player.fitness = player.fitness
         return new_player
+
+    def save_fitness_results(self , max_fitness , min_fitness , average_fitness):
+        if(self.generation_number == 0) :
+            generation_results ={
+                'best_fitnesses': [max_fitness],
+                'worst_fitnesses': [min_fitness],
+                'average_fitnesses': [average_fitness]
+            }
+            with open('generation_results.json', 'w') as file:
+                json.dump(generation_results, file)
+            file.close()
+        else:
+            with open('generation_results.json', 'r') as file:
+                generation_results = json.load(file)
+            file.close()
+            generation_results['best_fitnesses'].append(max_fitness)
+            generation_results['worst_fitnesses'].append(min_fitness)
+            generation_results['average_fitnesses'].append(average_fitness)
+
+            with open('generation_results.json', 'w') as file:
+                json.dump(generation_results, file)
+            file.close()
+        self.generation_number += 1

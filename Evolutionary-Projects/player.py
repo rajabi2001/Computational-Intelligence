@@ -1,3 +1,4 @@
+import math
 import random
 
 import pygame
@@ -37,27 +38,56 @@ class Player(pygame.sprite.Sprite):
             self.fitness = 0  # Initial fitness
 
             # TODO (Design your architecture here by changing the values)
-            # layer_sizes = [8, 17, 2]
-            layer_sizes = [4, 10, 1]
+            # layer_sizes = [4, 16, 1]
+            layer_sizes = [5, 20, 1]
 
             self.nn = NeuralNetwork(layer_sizes)
 
     def create_input_vector(self, screen_width, screen_height, obstacles, player_x, player_y):
 
-        player_x = player_x / screen_width
-        player_y = player_y / screen_height
-
-        if len(obstacles) > 1:
-            obstacle_x = player_x - obstacles[0]['x'] / screen_width
-            obstacle_y = player_y - obstacles[0]['y'] / screen_height
+        if len(obstacles):
+            target_position = [obstacles[0]['x'], obstacles[0]['y']]
         else:
-            obstacle_x = 0
-            obstacle_y = 0
-            
-        input_vector = [player_x, player_y, obstacle_x, obstacle_y]
-        input_vector = np.array(input_vector)
+            if player_x>380:
+                target_position = [410, 660]
+            else:
+                target_position = [177, 660]
+        
+        dist = 233
+        dist_right = 604 - player_x
+        dist_left = player_x        
+        left_gap = abs(player_x - dist - target_position[0])
+        right_gap = abs(player_x + dist - target_position[0])
+        d_distance = math.sqrt((player_x - target_position[0])**2 + (player_y - target_position[1])**2)
 
-        return input_vector
+
+        vector_max = max([dist_right, right_gap, d_distance, dist_left, left_gap])
+
+        return [dist_right/vector_max, right_gap/vector_max, d_distance/vector_max, dist_left/vector_max, left_gap/vector_max]
+
+
+    # def create_input_vector(self, screen_width, screen_height, obstacles, player_x, player_y):
+
+    #     player_x = player_x / screen_width
+    #     player_y = player_y / screen_height
+    #     obstacle1_x = 0
+    #     obstacle1_y = 0
+    #     obstacle2_x = 0
+    #     obstacle2_y = 0
+
+    #     if len(obstacles) == 1:
+    #         obstacle1_x = player_x - obstacles[0]['x'] / screen_width
+    #         obstacle1_y = player_y - obstacles[0]['y'] / screen_height
+    #     elif len(obstacles) >= 2:
+    #         obstacle2_x = player_x - obstacles[1]['x'] / screen_width
+    #         obstacle2_y = player_y - obstacles[1]['y'] / screen_height
+        
+            
+            
+    #     input_vector = [player_x, player_y, obstacle1_x, obstacle1_y,obstacle2_x, obstacle2_y]
+    #     input_vector = np.array(input_vector)
+
+    #     return input_vector
 
     def think(self, screen_width, screen_height, obstacles, player_x, player_y):
         """
@@ -74,16 +104,17 @@ class Player(pygame.sprite.Sprite):
         """
         # TODO (change player's gravity here by calling self.change_gravity)
 
-        # This is a test code that changes the gravity based on a random number. Remove it before your implementation.
-        # if random.randint(0, 2):
-        #     self.change_gravity('left')
-        # else:
+       
+
+        # if output[0][0] < 0.5:
         #     self.change_gravity('right')
+        # else:
+        #     self.change_gravity('left')
 
         input = self.create_input_vector(screen_width, screen_height, obstacles, player_x, player_y)
         output = self.nn.forward(input)
 
-        if output > 0.5:
+        if output[0][0]>0.5:
             self.change_gravity('right')
         else:
             self.change_gravity('left')
@@ -95,11 +126,11 @@ class Player(pygame.sprite.Sprite):
         Changes the self.player_gravity based on the input parameter.
         :param new_gravity: Either "left" or "right"
         """
-        # new_gravity = new_gravity.lower()
+        new_gravity = new_gravity.lower()
 
-        # if new_gravity != self.player_gravity:
-        #     self.player_gravity = new_gravity
-        #     self.flip_player_horizontally()
+        if new_gravity != self.player_gravity:
+            self.player_gravity = new_gravity
+            self.flip_player_horizontally()
 
     def player_input(self):
         """
